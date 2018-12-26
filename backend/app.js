@@ -1,6 +1,18 @@
 const express = require('express');
-
+const {Post} = require('./models/post');
 const app = express();
+
+const mongoose = require('mongoose');
+
+mongoose.connect('mongodb://localhost/mean', { useNewUrlParser: true })
+    .then(()=>{
+        console.log('connected to DB');
+    })
+    .catch(()=>{
+        console.log('Err connecting to DB');
+    });
+
+const bodyParser = require('body-parser');
 
 app.use((req,res,next)=>{
 
@@ -11,29 +23,39 @@ app.use((req,res,next)=>{
      );
     res.setHeader(
         'Access-Control-Allow-Methods',
-        'GET, PUT, POST, DELETE, OPTIONS'
+        'GET, PATCH, POST, DELETE, OPTIONS'
     )       
     next();
 });
 
-app.use('/api/posts',(req, res, next)=>{
-    const posts = [
-        {
-            id:'r2d2',
-            title:'First server side post',
-            content:'This is coming from server'
-        },
-        {
-            id:'xr',
-            title:'Second server side post',
-            content:'This is coming from server'
-        }
-    ]
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended:false}));
 
-    res.status(200).json({
-        message:'success',
-        posts:posts
+app.post('/api/posts', (req, res, next)=>{
+    const post = new Post({
+        title:req.body.title,
+        content:req.body.content
     });
+    post.save().then(post=>{
+        res.status(201).json({
+            message:'new Post was Added',
+            post:post
+        });
+    });
+});
+
+app.get('/api/posts',(req, res, next)=>{
+  Post.find().then(documents=>{
+    res.status(200).json({
+        message:'post saved successfully',
+        posts:documents
+    });
+  })
+});
+
+app.delete('/api/post/:id',(req,res,next)=>{
+    console.log(req.params.id);
+    res.status(200).json({message:'post deleted'});
 });
 
 module.exports = app;

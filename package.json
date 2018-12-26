@@ -8,7 +8,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "start:server":"nodemon server.js"
+    "start:server": "nodemon server.js"
   },
   "private": true,
   "dependencies": {
@@ -24,9 +24,11 @@
     "@angular/platform-browser-dynamic": "^6.0.0",
     "@angular/router": "^6.0.0",
     "angular": "^1.7.5",
+    "body-parser": "^1.18.3",
     "core-js": "^2.5.4",
     "debug": "^4.1.1",
     "express": "^4.16.4",
+    "mongoose": "^5.4.0",
     "rxjs": "^6.0.0",
     "zone.js": "^0.8.26"
   },
